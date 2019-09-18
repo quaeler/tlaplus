@@ -13,6 +13,7 @@ import tla2sany.explorer.ExploreNode;
 import tla2sany.explorer.ExplorerVisitor;
 import tla2sany.st.TreeNode;
 import tla2sany.xml.SymbolContext;
+import tlc2.value.impl.IntValue;
 
 /**
  * Describes a numeral like 4095.  This number is represented by the
@@ -30,6 +31,14 @@ public class NumeralNode extends ExprNode {
   private int value;
   private BigInteger bigValue = null;
   private String image;
+  
+  public Object getToolObject(int toolId) {
+	  Object toolObject = super.getToolObject(toolId);
+	  if (toolObject == null) {
+		  return IntValue.gen(value);
+	  }
+	  return toolObject;
+  }
 
   /**
    * The following method was modified by LL on 20 Jul 2011 to handle

@@ -77,7 +77,7 @@ public abstract class SemanticNode
    * calls these two methods with toolId = t to read and write this
    * information.
    */
-  public final Object getToolObject(int toolId) {
+  public Object getToolObject(int toolId) {
     if (this.tools.length <= toolId) return null;
     return this.tools[toolId];
   }

@@ -9,9 +9,11 @@ import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.PrintWriter;
+import java.util.List;
 
 import tla2sany.drivers.SANY;
 import tla2sany.modanalyzer.SpecObj;
+import tla2sany.semantic.ExprNode;
 import tla2sany.semantic.ExternalModuleTable;
 import tla2sany.semantic.ModuleNode;
 import tla2sany.semantic.OpDefNode;
@@ -89,7 +91,7 @@ public class CheckImplFile extends CheckImpl
     public final boolean getTrace()
     {
         String rfname = this.traceFile + this.ticnt;
-        File tfile = new File(rfname);
+        File tfile = new File(rfname + ".tla");
         ToolIO.out.println("Trying to work on trace " + tfile + " ...");
         if (!tfile.exists())
             return false;
@@ -118,13 +120,14 @@ public class CheckImplFile extends CheckImpl
         ModuleNode module = mt.getModuleNode(UniqueString.uniqueStringOf(rfname));
 
         // Put the sequence of states in the trace into this.states:
-        OpDefNode[] opDefs = module.getOpDefs();
-        int len = opDefs.length;
-        this.states = new TLCState[len];
-        for (int i = 0; i < len; i++)
-        {
-            TLCState state = this.tool.makeState(opDefs[i].getBody());
-            this.states[i] = state;
+		final List<OpDefNode> opDefs = module.getModuleOpDefs();
+		int len = opDefs.size();
+		this.states = new TLCState[len];
+		int i = 0;
+		for (OpDefNode node : opDefs) {
+			ExprNode body = node.getBody();
+			TLCState state = this.tool.makeState(body);
+			this.states[i++] = state;
         }
         this.sidx = 0;
         this.ticnt++;

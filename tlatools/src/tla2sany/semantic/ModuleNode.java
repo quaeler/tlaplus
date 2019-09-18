@@ -13,6 +13,7 @@
 package tla2sany.semantic;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.Enumeration;
@@ -20,6 +21,7 @@ import java.util.HashSet;
 import java.util.Hashtable;
 import java.util.Iterator;
 import java.util.List;
+import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
 import org.w3c.dom.Document;
@@ -419,6 +421,12 @@ public class ModuleNode extends SymbolNode {
   public final OpDefNode getOpDef(final UniqueString name) {
 	  return Stream.of(getOpDefs()).filter(o -> o.getName() == name).findFirst().orElse(null);
   }
+
+	public final List<OpDefNode> getModuleOpDefs() {
+		OpDefNode[] opDefNodes = getOpDefs();
+		return Arrays.asList(opDefNodes).stream()
+				.filter(o -> o.getLocation().source().equals(this.getLocation().source())).collect(Collectors.toList());
+	}
 
   /*************************************************************************
   * Returns an array of all ThmOrAssumpDefNode objects created in the      *
